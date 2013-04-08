@@ -38,7 +38,8 @@ NAVY.Table = function(jqObj,sourceData,targetData,options){
         ths:[],//表格头显示的文字
         skip:{},//需要隐藏的字段的key
         changeHanlder:function(data){console.log(data)},//当某个td可编辑失去焦点时的回调函数
-        footHtml:''
+        isFixHead:true,//固定表格头部
+        footHtml:''//表格脚部内容
     };
     this.docs = targetData.length ? targetData : [];//sourceData经过map后的目标数据，用于页面显示
     this.sourceData = sourceData.length ? sourceData : [{}];//原始数据
@@ -63,10 +64,11 @@ NAVY.Table.prototype = {
     initEvent:function(){
         var jqObj = this.jqObj;
         var _this = this;
-        var tableObj = jqObj.find('.kalengoTable');//生成的table对象
-        var tableBody = tableObj.find('.kalengoTbody');//table的body
+        var options = _this.options;
+        var tableObj = jqObj.find('.navyTable');//生成的table对象
+        var tableBody = tableObj.find('.navyTbody');//table的body
         var thObjs = tableObj.find('th');//table的th
-        var trObjs = tableObj.find('.kalengoTableTr');//table的tr对象
+        var trObjs = tableObj.find('.navyTableTr');//table的tr对象
         var trObjsLen = trObjs.length;
         jqObj.on('click','.sortAble',function(e){
             //对可编辑的td对象绑定点击事件
@@ -107,6 +109,10 @@ NAVY.Table.prototype = {
                 }
                 return false;
             });
+        //规定表格头部
+        if(options.isFixHead){
+            tableObj.find('.navyThead').addClass('fixed');
+        }
         return this;
     },
     /**
@@ -136,7 +142,7 @@ NAVY.Table.prototype = {
         var docs = this.docs;//source数据经过map后的目标数据，用于页面的显示
         var tempArray = $.makeArray(docs),tempHtmlArr = [],options = this.options,sortAbleArr  = options.sortable,skip = options.skip;//需要隐藏的列
         var sortAbleLen = sortAbleArr.length,tableHead = [];
-        tempHtmlArr.push('<table class="kalengoTable">');
+        tempHtmlArr.push('<table class="navyTable">');
         docs = $.isArray(docs) ? docs : $.isArray(tempArray) ? tempArray : [];
         var i = 0,docLen = docs.length,curDoc = docs[0],thLen ;
         //提取页面显示的列的key
@@ -145,7 +151,7 @@ NAVY.Table.prototype = {
         }
         thLen = tableHead.length;
         $.extend(tableHead,options.ths);
-        tempHtmlArr.push('<thead class="kalengoThead">');
+        tempHtmlArr.push('<thead class="navyThead">');
         //生成table 的 th
         for(i = 0 ; i < thLen ; i++){
             var isSortAble = '';
@@ -155,9 +161,9 @@ NAVY.Table.prototype = {
                     break;
                 }
             }
-            tempHtmlArr.push('<th class="kalengoTableTh kalengoTableTh'+i+' '+isSortAble+'"><div class="thContainer">'+tableHead[i]+'</div><div class="arrowContainer upArrow hidden">↑</div><div class="arrowContainer downArrow hidden">↓</div></th>')
+            tempHtmlArr.push('<th class="navyTableTh navyTableTh'+i+' '+isSortAble+'"><div class="thContainer">'+tableHead[i]+'</div><div class="arrowContainer upArrow hidden">↑</div><div class="arrowContainer downArrow hidden">↓</div></th>')
         }
-        tempHtmlArr.push('</thead><tbody class="kalengoTbody">');
+        tempHtmlArr.push('</thead><tbody class="navyTbody">');
         //生成table body 的内容
         for(i = 0;i<docLen;i++){
             curDoc =  docs[i];
@@ -165,14 +171,14 @@ NAVY.Table.prototype = {
             if($.isPlainObject(curDoc) && !($.isEmptyObject(curDoc))){
                 var hoverClass = 'odd';
                 ((i+1)%2 === 0) && (hoverClass ='even');
-                tempHtmlArr.push('<tr class="kalengoTableTr '+hoverClass+'">');
+                tempHtmlArr.push('<tr class="navyTableTr '+hoverClass+'">');
                 for(var tempKey in curDoc){
-                    tempHtmlArr.push('<td td-class="'+tempKey+'" class="'+(skip[tempKey] || '')+' kalengoTableTd '+tempKey+' kalengoTableTd'+(q++)+'"><div class="contentContainer">'+curDoc[tempKey]+'</div></td>');
+                    tempHtmlArr.push('<td td-class="'+tempKey+'" class="'+(skip[tempKey] || '')+' navyTableTd '+tempKey+' navyTableTd'+(q++)+'"><div class="contentContainer">'+curDoc[tempKey]+'</div></td>');
                 }
                 tempHtmlArr.push('</tr>');
             }
         }
-        var footHtml = options.footHtml ? ('<tfoot class="kalengoTableFoot"><tr><th colspan="'+thLen+'"><p class="footContainer">'+options.footHtml+'</p></th></tr></tfoot>') : '';
+        var footHtml = options.footHtml ? ('<tfoot class="navyTableFoot"><tr><th colspan="'+thLen+'"><p class="footContainer">'+options.footHtml+'</p></th></tr></tfoot>') : '';
         tempHtmlArr.push('</tbody>'+footHtml+'</table>');
         this.jqObj.append(tempHtmlArr.join(''));
         return this;
@@ -200,7 +206,7 @@ NAVY.Table.prototype = {
         var sourceDataKeysLen = sourceDataKeys.length;
         var selfParent = self.parent();
         changeData[selfParent.attr('td-class')] = self.html();
-        var siblingsObj = selfParent.siblings('.kalengoTableTd');
+        var siblingsObj = selfParent.siblings('.navyTableTd');
         var i = 0;
         var siblingsLen = siblingsObj.length;
         //提取当前编辑行的数据

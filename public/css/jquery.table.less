@@ -1,0 +1,93 @@
+@charset "utf-8";
+*{
+    margin: 0;
+    padding: 0;
+}
+.navyTable{
+    width:100%;
+    padding: 0;
+    margin: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    .sortAble{
+        cursor: pointer;
+    }
+    .even{
+        background: #999;
+    }
+    .odd{
+        background: #ccc;
+    }
+    .hidden{
+        display: none;
+    }
+    img{
+        border: none;
+        vertical-align: middle;
+    }
+    .navyThead{
+        background: #333;
+        color: #fff;
+        th{
+            height: 40px;
+            line-height: 40px;
+            border: 1px solid #333;
+            text-align: center;
+            position: relative;
+            font-size: 14px;
+            font-weight: bold;
+            .arrowContainer{
+                font-size: 14px;
+                font-weight: bold;
+            }
+        }
+        .desc{
+            .downArrow{
+                display: block;
+                position: absolute;
+                width: 10px;
+                top:0;
+                right:10px;
+            }
+        }
+        .asc{
+            .upArrow{
+                display: block;
+                position: absolute;
+                width: 10px;
+                top:0;
+                right:10px;
+            }
+        }
+    }
+    .navyTbody{
+        .navyTableTr{
+            &:hover{
+                background: #6CADD9;
+            }
+            .navyTableTd{
+                vertical-align: middle;
+                text-align: center;
+                border: 1px solid #333;
+                padding: 5px 10px;
+                .contentContainer{
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
+    }
+    .navyTableFoot{
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+        background: #eee;
+        text-align: center;
+        color: #999;
+        font-size: 12px;
+        th{
+            text-align: center;
+        }
+    }
+}
+
